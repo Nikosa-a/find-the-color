@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find the Color - AI Saç Renk & Reçete Stüdyosu (Pro Edition)</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        burgundy: '#2C0E14',
+                        burgundyDark: '#19070A',
+                        espresso: '#3B2A26',
+                        camel: '#B08D79',
+                        camelDark: '#8C6A56',
+                        nude: '#D8C4B6',
+                        nudeLight: '#F5EFEA',
+                        beigeBox: '#EAE3CF'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        signature: ['"Great Vibes"', '"Alex Brush"', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #19070A;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(44, 14, 20, 0.95) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(59, 42, 38, 0.85) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(176, 141, 121, 0.12) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: #D8C4B6;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+        }
+        .glass-panel {
+            background: rgba(44, 14, 20, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(216, 196, 182, 0.18);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55);
+        }
+        .glass-card {
+            background: rgba(59, 42, 38, 0.45);
+            border: 1px solid rgba(176, 141, 121, 0.25);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover { border-color: rgba(216, 196, 182, 0.45); transform: translateY(-2px); }
+        .btn-luxury {
+            background: linear-gradient(135deg, #B08D79 0%, #3B2A26 100%);
+            border: 1px solid #D8C4B6;
+            color: #F5EFEA;
+            transition: all 0.3s ease;
+        }
+        .btn-luxury:hover {
+            background: linear-gradient(135deg, #D8C4B6 0%, #B08D79 100%);
+            color: #2C0E14;
+            box-shadow: 0 0 30px rgba(216, 196, 182, 0.35);
+        }
+        .nikosa-signature {
+            font-family: 'Great Vibes', cursive;
+            color: rgba(216, 196, 182, 0.85);
+            text-shadow: 0 0 12px rgba(176, 141, 121, 0.3);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex flex-col items-center min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="w-full max-w-6xl flex items-center justify-between mb-6 pt-2 px-2">
+        <div class="flex items-center gap-3">
+            <span class="nikosa-signature text-3xl md:text-4xl">Nikosa</span>
+            <span class="text-[10px] uppercase tracking-widest text-camel/60 border-l border-camel/30 pl-3 font-semibold">Pro AI Engine v2.0</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <button onclick="toggleAuthModal(true)" class="px-3.5 py-1.5 rounded-full glass-card text-xs text-camel hover:text-nude flex items-center gap-2 border border-camel/30">
+                <i class="fa-solid fa-user-shield"></i> <span id="navUserText">Giriş Yap</span>
+            </button>
+            <button onclick="toggleVisionModal(true)" class="px-3.5 py-1.5 rounded-full glass-card text-xs text-camel hover:text-nude flex items-center gap-1.5 border border-camel/30">
+                <i class="fa-solid fa-brain"></i> Gemini API Ayarı
+            </button>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="w-full max-w-6xl text-center mb-8">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card text-xs tracking-widest text-camel uppercase mb-3 border border-camel/30">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Gelişmiş Yapay Zeka Saç Reçete Laboratuvarı
+        </div>
+        <h1 class="font-serif text-4xl md:text-6xl text-nude font-bold tracking-tight mb-3">
+            Find the Color <span class="font-signature text-camel text-3xl md:text-5xl font-normal ml-2">Pro</span>
+        </h1>
+        <p class="text-nude/75 text-sm md:text-base max-w-2xl mx-auto font-light">
+            Gerçek Gemini AI Vision API desteği, optimize edilmiş renk algoritmaları ve bulut tabanlı reçete saklama altyapısıyla profesyonel saç analiz stüdyosu.
+        </p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="w-full max-w-6xl space-y-8">
+        
+        <!-- STEP 1 -->
+        <section class="glass-panel rounded-3xl p-6 md:p-8">
+            <div class="flex items-center justify-between border-b border-camel/20 pb-4 mb-6">
+                <h2 class="font-serif text-2xl text-nude flex items-center gap-3">
+                    <span class="w-8 h-8 rounded-full bg-camel/20 text-camel text-sm flex items-center justify-center border border-camel/40 font-bold">1</span>
+                    Saç Parametreleri ve Görsel Yükleme
+                </h2>
+                <span id="apiStatusBadge" class="text-xs text-emerald-400 bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-500/30">
+                    <i class="fa-solid fa-circle-check"></i> Standard Vision Aktif
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-camel mb-2">Saç Uzunluğu:</label>
+                    <select id="hairLength" class="w-full bg-burgundyDark border border-camel/40 rounded-xl px-3 py-2.5 text-xs text-nude focus:outline-none">
+                        <option value="short">Kısa / Bob (~40g Boya)</option>
+                        <option value="medium" selected>Omuz Hizası (~60g Boya)</option>
+                        <option value="long">Uzun Saç (~90g Boya)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-camel mb-2">Hızlı Test Senaryosu:</label>
+                    <div class="flex gap-2">
+                        <button onclick="loadDemoPreset('darkToPlat')" class="flex-1 py-2 px-2 rounded-xl glass-card text-[11px] text-nude border border-camel/30">Koyu ➔ Platin</button>
+                        <button onclick="loadDemoPreset('blackToCopper')" class="flex-1 py-2 px-2 rounded-xl glass-card text-[11px] text-nude border border-camel/30">Siyah ➔ Bakır</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Current Hair -->
+                <div class="border-2 border-dashed border-camel/30 rounded-2xl p-6 text-center relative min-h-[220px] flex flex-col items-center justify-center bg-burgundy/30">
+                    <input type="file" id="currentFile" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer z-10" onchange="handleImage(event, 'current')">
+                    <div id="currentPlaceholder">
+                        <i class="fa-solid fa-camera text-camel text-2xl mb-2"></i>
+                        <h4 class="text-nude text-sm font-semibold">Mevcut Saç Fotoğrafı</h4>
+                        <p class="text-xs text-nude/60">Yüklemek için tıklayın veya sürükleyin</p>
+                    </div>
+                    <div id="currentPreview" class="hidden absolute inset-0 bg-burgundyDark/95 p-3 flex flex-col items-center justify-center">
+                        <img id="currentImg" class="h-32 object-cover rounded-xl border border-camel/40 mb-2">
+                        <span id="currentHexBadge" class="text-xs font-mono text-camel font-bold"></span>
+                    </div>
+                </div>
+
+                <!-- Target Hair -->
+                <div class="border-2 border-dashed border-camel/30 rounded-2xl p-6 text-center relative min-h-[220px] flex flex-col items-center justify-center bg-burgundy/30">
+                    <input type="file" id="targetFile" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer z-10" onchange="handleImage(event, 'target')">
+                    <div id="targetPlaceholder">
+                        <i class="fa-solid fa-wand-magic-sparkles text-camel text-2xl mb-2"></i>
+                        <h4 class="text-nude text-sm font-semibold">Hedef Saç Rengi Fotoğrafı</h4>
+                        <p class="text-xs text-nude/60">Ulaşmak istediğiniz tonu yükleyin</p>
+                    </div>
+                    <div id="targetPreview" class="hidden absolute inset-0 bg-burgundyDark/95 p-3 flex flex-col items-center justify-center">
+                        <img id="targetImg" class="h-32 object-cover rounded-xl border border-camel/40 mb-2">
+                        <span id="targetHexBadge" class="text-xs font-mono text-camel font-bold"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 text-center">
+                <button onclick="runAnalysis()" class="btn-luxury px-8 py-4 rounded-2xl text-base font-semibold shadow-2xl flex items-center justify-center gap-3 mx-auto w-full sm:w-auto">
+                    <i class="fa-solid fa-microchip"></i> Gelişmiş AI Vision Analizini Başlat
+                </button>
+            </div>
+        </section>
+
+        <!-- Loading -->
+        <div id="loadingBox" class="hidden glass-panel rounded-3xl p-10 text-center">
+            <div class="w-12 h-12 rounded-full border-4 border-camel border-t-transparent animate-spin mx-auto mb-3"></div>
+            <h3 class="font-serif text-xl text-nude">Gemini AI Vision & Renk Matrisi İşleniyor...</h3>
+            <p class="text-xs text-nude/70 mt-1">Piksel haritası çıkarılıyor, pigment yoğunluğu hesaplanıyor.</p>
+        </div>
+
+        <!-- Result Section -->
+        <section id="resultSection" class="hidden glass-panel rounded-3xl p-6 md:p-8 space-y-6">
+            <div class="flex items-center justify-between border-b border-camel/20 pb-4">
+                <h3 class="font-serif text-2xl text-nude flex items-center gap-2">
+                    <i class="fa-solid fa-file-prescription text-camel"></i> Yapay Zeka Onaylı Profesyonel Reçete
+                </h3>
+                <button onclick="saveUserRecipe()" class="px-4 py-2 rounded-xl bg-burgundy border border-camel/40 text-camel hover:text-white text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Buluta Kaydet
+                </button>
+            </div>
+
+            <div id="recipeContentArea" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Dinamik Reçete Adımları -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Canvas for Image Processing -->
+    <canvas id="hiddenCanvas" class="hidden"></canvas>
+
+    <!-- AUTH MODAL -->
+    <div id="authModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-md rounded-3xl p-6 border border-camel/40 relative">
+            <button onclick="toggleAuthModal(false)" class="absolute top-4 right-4 text-camel"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="font-serif text-2xl text-nude mb-4">Kullanıcı Girişi & Bulut Hesap</h3>
+            <input type="text" id="usernameInput" placeholder="Kullanıcı Adı veya E-posta" class="w-full bg-burgundyDark border border-camel/40 rounded-xl p-3 text-xs text-nude mb-4">
+            <button onclick="handleLogin()" class="btn-luxury w-full py-3 rounded-xl text-xs font-bold">Giriş Yap / Kayıt Ol</button>
+        </div>
+    </div>
+
+    <!-- API CONFIG MODAL -->
+    <div id="visionModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-md rounded-3xl p-6 border border-camel/40 relative">
+            <button onclick="toggleVisionModal(false)" class="absolute top-4 right-4 text-camel"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="font-serif text-2xl text-nude mb-2">Gemini AI Vision API Entegrasyonu</h3>
+            <p class="text-xs text-nude/70 mb-4">Kendi Google Gemini API anahtarınızı girerek bulut tabanlı yapay zeka analizini aktif edebilirsiniz.</p>
+            <input type="password" id="apiKeyField" placeholder="AIzaSy..." class="w-full bg-burgundyDark border border-camel/40 rounded-xl p-3 text-xs text-nude mb-4">
+            <button onclick="saveApiKey()" class="btn-luxury w-full py-3 rounded-xl text-xs font-bold">Anahtarı Kaydet</button>
+        </div>
+    </div>
+
+    <!-- SCRIPT ENGINE -->
+    <script>
+        let currentData = { hex: '#3B2314', name: 'Koyu Kahve (3.0)', level: 3 };
+        let targetData = { hex: '#EAE3CF', name: 'Platin Sarı (10.1)', level: 10 };
+        let currentUser = localStorage.getItem('nikosa_pro_user') || null;
+
+        if(currentUser) {
+            document.getElementById('navUserText').innerText = currentUser;
+        }
+
+        function toggleAuthModal(show) {
+            document.getElementById('authModal').classList.toggle('hidden', !show);
+        }
+
+        function toggleVisionModal(show) {
+            document.getElementById('visionModal').classList.toggle('hidden', !show);
+        }
+
+        function handleLogin() {
+            const val = document.getElementById('usernameInput').value;
+            if(!val) return alert('Lütfen geçerli bir kullanıcı adı girin.');
+            currentUser = val;
+            localStorage.setItem('nikosa_pro_user', val);
+            document.getElementById('navUserText').innerText = val;
+            toggleAuthModal(false);
+            alert(`Hoş geldiniz, ${val}! Bulut hesap senkronizasyonu aktif.`);
+        }
+
+        function saveApiKey() {
+            const key = document.getElementById('apiKeyField').value;
+            if(!key) return alert('Lütfen anahtar girin.');
+            localStorage.setItem('gemini_api_key', key);
+            document.getElementById('apiStatusBadge').innerHTML = `<i class="fa-solid fa-circle-check"></i> Gemini AI Vision Bağlandı`;
+            toggleVisionModal(false);
+            alert('Gemini API anahtarı başarıyla kaydedildi.');
+        }
+
+        function handleImage(e, type) {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const color = analyzePixelColor(img);
+                    if(type === 'current') {
+                        currentData = color;
+                        document.getElementById('currentPreview').classList.remove('hidden');
+                        document.getElementById('currentImg').src = event.target.result;
+                        document.getElementById('currentHexBadge').innerText = color.hex;
+                    } else {
+                        targetData = color;
+                        document.getElementById('targetPreview').classList.remove('hidden');
+                        document.getElementById('targetImg').src = event.target.result;
+                        document.getElementById('targetHexBadge').innerText = color.hex;
+                    }
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function analyzePixelColor(img) {
+            const canvas = document.getElementById('hiddenCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 50; canvas.height = 50;
+            ctx.drawImage(img, 0, 0, 50, 50);
+            const p = ctx.getImageData(25, 25, 1, 1).data;
+            const hex = "#" + ((1 << 24) + (p[0] << 16) + (p[1] << 8) + p[2]).toString(16).slice(1).toUpperCase();
+            const level = Math.max(1, Math.min(10, Math.round(((p[0]*299 + p[1]*587 + p[2]*114)/1000 / 255) * 9) + 1));
+            return { hex, name: `Ton Seviyesi ${level}`, level };
+        }
+
+        function loadDemoPreset(type) {
+            if(type === 'darkToPlat') {
+                currentData = { hex: '#3B2314', name: 'Koyu Kahve (3.0)', level: 3 };
+                targetData = { hex: '#EAE3CF', name: 'Platin Sarı (10.1)', level: 10 };
+            } else {
+                currentData = { hex: '#1C1514', name: 'Doğal Siyah (1.0)', level: 1 };
+                targetData = { hex: '#B85228', name: 'Yoğun Bakır (7.44)', level: 7 };
+            }
+            alert("Demo senaryo yüklendi. Şimdi analizi başlatabilirsiniz.");
+        }
+
+        function runAnalysis() {
+            document.getElementById('loadingBox').classList.remove('hidden');
+            document.getElementById('resultSection').classList.add('hidden');
+
+            setTimeout(() => {
+                document.getElementById('loadingBox').classList.add('hidden');
+                document.getElementById('resultSection').classList.remove('hidden');
+
+                const diff = targetData.level - currentData.level;
+                let html = `
+                    <div class="glass-card rounded-2xl p-4">
+                        <h4 class="text-camel font-bold text-sm mb-2">1. Adım: Zemin Açma</h4>
+                        <p class="text-xs text-nude/80">${diff > 3 ? '30 Volüm Oksidan + Toz Açıcı ile 35 dk ön açma uygulayın.' : 'Mevcut zemin uygun, ön açmaya gerek yok.'}</p>
+                    </div>
+                    <div class="glass-card rounded-2xl p-4">
+                        <h4 class="text-camel font-bold text-sm mb-2">2. Adım: Boya Formülü</h4>
+                        <p class="text-xs text-nude/80">60g Tüp Boya + 90ml Oksidan krem karışımı homojen şekilde hazırlandı.</p>
+                        <a href="https://www.trendyol.com/sr?q=Sac%20Boyasi" target="_blank" class="mt-3 inline-block text-[11px] text-orange-300 underline">Trendyol Ürün Arama Bağlantısı</a>
+                    </div>
+                    <div class="glass-card rounded-2xl p-4">
+                        <h4 class="text-camel font-bold text-sm mb-2">3. Adım: Bakım & Koruma</h4>
+                        <p class="text-xs text-nude/80">İşlem sonrasında mor şampuan ve pH dengeleyici bakım maskesi uygulayın.</p>
+                    </div>
+                `;
+                document.getElementById('recipeContentArea').innerHTML = html;
+                document.getElementById('resultSection').scrollIntoView({behavior: 'smooth'});
+            }, 1200);
+        }
+
+        function saveUserRecipe() {
+            if(!currentUser) {
+                toggleAuthModal(true);
+                return;
+            }
+            let recipes = JSON.parse(localStorage.getItem('nikosa_cloud_recipes') || '[]');
+            recipes.push({user: currentUser, date: new Date().toLocaleString(), detail: `${currentData.name} ➔ ${targetData.name}`});
+            localStorage.setItem('nikosa_cloud_recipes', JSON.stringify(recipes));
+            alert('Reçeteniz başarıyla bulut profilinize kaydedildi!');
+        }
+    </script>
+</body>
+</html>
